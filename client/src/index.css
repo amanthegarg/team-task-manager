@@ -111,4 +111,36 @@
   .table-row {
     @apply border-t border-gray-800 hover:bg-gray-800/50 transition-colors duration-150;
   }
+
+  /* Mobile-first responsive helpers */
+  .page-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Subtle focus ring for keyboard nav */
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950;
+  }
+
+  /* Truncate long text */
+  .text-truncate {
+    @apply overflow-hidden text-ellipsis whitespace-nowrap;
+  }
+
+  /* Glassmorphism card variant */
+  .card-glass {
+    @apply bg-gray-900/60 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 shadow-2xl;
+  }
+
+  /* Animated gradient for empty state illustrations */
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400;
+  }
+}
+
+@layer utilities {
+  /* Safe-area bottom padding for mobile notched devices */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
