@@ -18,32 +18,31 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
-const PORT = process.env.PORT || 5000
 
-// ─── CORS ─────────────────────────────────────────────────────────────────────
+// ✅ Railway PORT (IMPORTANT)
+const PORT = process.env.PORT || 3000
+
+// ─── CORS (FIXED FOR PRODUCTION) ──────────────────────────────────────────────
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? true                                   // allow same-origin in prod
-    : (process.env.CLIENT_ORIGIN || 'http://localhost:5173'),
+  origin: true, // allows same domain (Railway)
   credentials: true,
 }))
 
 // ─── Body & Cookie Parsing ────────────────────────────────────────────────────
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json({ limit: '10kb' }))
 app.use(cookieParser())
 
-// ─── Rate Limiting on Auth Routes ────────────────────────────────────────────
+// ─── Rate Limiting (SAFE FOR 100 USERS) ───────────────────────────────────────
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20,
+  windowMs: 15 * 60 * 1000,
+  max: 100, // increased for production
   standardHeaders: true,
   legacyHeaders: false,
   message: {
     success: false,
     data: null,
     message: 'Too many requests',
-    error: 'Too many requests from this IP. Please try again after 15 minutes.',
+    error: 'Too many requests from this IP. Please try again later.',
   },
 })
 
@@ -54,21 +53,28 @@ app.use('/api/tasks', taskRoutes)
 app.use('/api/dashboard', dashboardRoutes)
 app.use('/api/users', userRoutes)
 
-// ─── Serve Static Frontend (production) ──────────────────────────────────────
+// ─── Serve Frontend (PRODUCTION FIXED) ─────────────────────────────────────────
 if (process.env.NODE_ENV === 'production') {
   const distPath = path.join(__dirname, '../client/dist')
+
   app.use(express.static(distPath))
+
   app.get('*', (req, res) => {
     res.sendFile(path.join(distPath, 'index.html'))
   })
 }
 
-// ─── 404 & Global Error Handler ──────────────────────────────────────────────
+// ─── Health Check (Railway stability) ─────────────────────────────────────────
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' })
+})
+
+// ─── 404 & Error Handler ──────────────────────────────────────────────────────
 app.use(notFoundHandler)
 app.use(errorHandler)
 
-// ─── Start Server ─────────────────────────────────────────────────────────────
-app.listen(PORT, () => {
+// ─── Start Server (RAILWAY SAFE) ──────────────────────────────────────────────
+app.listen(PORT, '0.0.0.0', () => {
   logger.info(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`)
 })
 

@@ -1,20 +1,24 @@
-import axios from 'axios'
+import axios from 'axios';
 
 const api = axios.create({
   baseURL: '/api',
   withCredentials: true,
-  headers: { 'Content-Type': 'application/json' },
-})
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-// Intercept 401 globally — redirect to login
 api.interceptors.response.use(
-  (response) => response,
+  (res) => res,
   (error) => {
-    if (error.response?.status === 401) {
-      window.location.href = '/login'
+    if (
+      error.response?.status === 401 &&
+      !window.location.pathname.includes('/login')
+    ) {
+      window.location.href = '/login';
     }
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
+);
 
-export default api
+export default api;

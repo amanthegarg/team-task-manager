@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "Team Task Manager - Express API server",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "npx prisma migrate deploy && node server.js",
-    "build": "cd ../client && npm install && npm run build"
+
+    "build": "npm install --prefix ../client && npm run build --prefix ../client && npx prisma generate",
+
+    "start": "npx prisma db push --accept-data-loss && node server.js"
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
