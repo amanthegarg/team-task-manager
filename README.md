@@ -204,14 +204,4 @@ NODE_ENV=production
 ### Step 6 — Deploy
 Railway will build the frontend (`npm run build` in `/client`) and start the Express server which serves both the API and the built frontend.
 
----
 
-## Screenshots
-
-> Add screenshots here
-
----
-
-## Live URL
-
-> https://your-app.railway.app
