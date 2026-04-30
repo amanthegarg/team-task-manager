@@ -11,6 +11,7 @@ import authRoutes from './routes/authRoutes.js'
 import projectRoutes from './routes/projectRoutes.js'
 import taskRoutes from './routes/taskRoutes.js'
 import dashboardRoutes from './routes/dashboardRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 import { notFoundHandler, errorHandler } from './middleware/errorHandler.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -51,6 +52,7 @@ app.use('/api/auth', authLimiter, authRoutes)
 app.use('/api/projects', projectRoutes)
 app.use('/api/tasks', taskRoutes)
 app.use('/api/dashboard', dashboardRoutes)
+app.use('/api/users', userRoutes)
 
 // ─── Serve Static Frontend (production) ──────────────────────────────────────
 if (process.env.NODE_ENV === 'production') {
